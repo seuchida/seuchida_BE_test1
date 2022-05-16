@@ -329,7 +329,6 @@ router.post('/postWrite', authMiddleware, async (req, res) => {
                 memberDesc: userContent,
             })
         }
-
         res.send({ result: 'success', postList, NowMember });
     } catch (error) {
         console.log(error);
