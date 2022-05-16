@@ -141,12 +141,13 @@ router.post(
                     }
                 );
 
-                const allPost = await Post.find({}, { NowMember: 1 });
+                const allPost = await Post.find({}, { nowMember: 1 });
                 console.log('###############', allPost);
 
-                const alllPost = await Post.find({});
-                console.log('$$$$$$$$$', allPost.NowMember);
-
+                for (let i = 0; i < allPost[0].length; i++) {
+                    const noo = allPost[0][i].nowMember[0][i];
+                    console.log('^^^^^^^^^^^', noo);
+                }
                 await Review.updateMany(
                     { userId },
                     {

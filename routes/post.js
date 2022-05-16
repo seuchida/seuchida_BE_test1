@@ -223,9 +223,10 @@ router.get('/nearPostList', authMiddleware, async (req, res) => {
 router.get('/postDetail/:postId', authMiddleware, async (req, res) => {
     const { postId } = req.params;
     const post = await Post.findOne({ _id: postId });
-    post[0][i].nowMember[0][i];
+ 
     const postNowMember = post.nowMember;
     const nowMember = await NowMember.find({ postId });
+    console.log("나우멤바", nowMember)
 
     for (let i = 0; i < nowMember[0].length; i++) {
         if (post[0][i].nowMember[0][i].memberId !== nowMember[0][i].memberId) {
@@ -398,12 +399,53 @@ router.post('/postWrite', authMiddleware, async (req, res) => {
             owner: usersId,
             createdAt,
         });
+    
 
         const thisPost = await Post.find({}, { postTitle: 1 });
+        console.log("디이스으포스트으으으", thisPost)
         let nowMems;
-        for (let i = 0; i < thisPost[0].length; i++) {
-            if (thisPost[0][i].postTitle != postTitle) {
-                const thisPostId = await Post.find({ postTitle }, { _id: i });
+        console.log("!!!!!!!!!!!!!!", thisPost.length)
+        for (let i = 0; i < thisPost.length; i++) {
+            if (thisPost[i].postTitle != postTitle) {
+
+                const thisPosts = await Post.find(
+                    { postTitle },
+                    { _id: 1, createdAt: 1 }
+                );
+                console.log('포스트아이디1', thisPosts);
+
+                const thisPostId = thisPosts
+                    .sort(
+                        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                    )
+                    .slice(0, 1);
+                    console.log(thisPostId)
+
+                const A = String(thisPostId[0]._id);
+                console.log('포스트아이디2', A);
+
+                nowMems = await NowMember.create({
+                    postId: A,
+                    memberId: usersId,
+                    memberImg: userImg,
+                    memberNickname: nickName,
+                    memberGen: userGender,
+                    memberAgee: userAge,
+                    memberCategory: userInterest,
+                    memberDesc: userContent,
+                });
+
+                postList = await Post.updateMany(
+                    { _id: A },
+                    { $push: { nowMember: nowMems } }
+                );
+                const userPush = await User.updateMany(
+                    { usersId },
+                    { $push: { pushExercise: A } }
+                );
+                return res.status(200).json({ postList, nowMems });
+            } else {
+                const thisPostId = await Post.find({ postTitle }, { _id: 1 });
                 // 배열인지 객체인지 확인
                 console.log('포스트아이디0', thisPostId);
 
@@ -420,52 +462,16 @@ router.post('/postWrite', authMiddleware, async (req, res) => {
                 });
 
                 postList = await Post.updateMany(
-                    { _id: A[0] },
+                    { _id: A },
                     { $push: { nowMember: nowMems } }
                 );
                 const userPush = await User.updateMany(
                     { usersId },
                     { $push: { pushExercise: A[0] } }
                 );
-            } else {
-                const thisPosts = await Post.find(
-                    { postTitle },
-                    { _id: 1, createAt: 1 }
-                );
-                console.log('포스트아이디1', thisPosts);
-
-                const thisPostId = thisPosts
-                    .sort(
-                        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-                    )
-                    .slice(0, 1);
-
-                const A = String(thisPostId[0]._id).split('"');
-                console.log('포스트아이디2', A);
-
-                nowMems = await NowMember.create({
-                    postId: A[0],
-                    memberId: usersId,
-                    memberImg: userImg,
-                    memberNickname: nickName,
-                    memberGen: userGender,
-                    memberAgee: userAge,
-                    memberCategory: userInterest,
-                    memberDesc: userContent,
-                });
-
-                postList = await Post.updateMany(
-                    { _id: A[0] },
-                    { $push: { nowMember: nowMems } }
-                );
-                const userPush = await User.updateMany(
-                    { usersId },
-                    { $push: { pushExercise: A[0] } }
-                );
+                return res.status(200).json({ postList, nowMems });
             }
         }
-
-        res.send({ result: 'success', postList, nowMems });
     } catch (error) {
         console.log(error);
 
