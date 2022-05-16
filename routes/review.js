@@ -50,6 +50,8 @@ router.post(
                 spot,
                 postCategory,
             });
+            await user.deleteOne({ userId }, { pushExercise: postId });
+
             res.status(200).json({ result: 'success', reviewList });
         } catch (error) {
             console.log(error);
