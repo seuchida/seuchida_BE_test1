@@ -5,6 +5,7 @@ const cors = require('cors')
 const passportConfig = require('./passport')
 // const fs = require('fs')
 // const https = require('https')
+const http = require('http')
 const socket = require('./socket')
 
 // const privateKey = fs.readFileSync(__dirname + '/private.key', 'utf8')
