@@ -70,9 +70,9 @@ app.get(
 const server = https.createServer(credentials, app)
 socket(server)
 
-app.listen(httpPort, () => {
-    console.log('https서버가 켜졌어요!')
-})
+// app.listen(httpPort, () => {
+//     console.log('https서버가 켜졌어요!')
+// })
 
 server.listen(httpsPort, () => {
     console.log('https서버가 켜졌어요!')
