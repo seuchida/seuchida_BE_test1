@@ -14,7 +14,7 @@ module.exports = (server) => {
             methods: ["GET", "POST"],
             transports: ['websocket'],
             credentials: true
-        },
+        }, 
         allowEIO3: true,
         // pingInterval: 9000,
         // pingTimeout: 15000,
