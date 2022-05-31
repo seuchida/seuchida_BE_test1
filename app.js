@@ -58,15 +58,15 @@ app.use('/api', express.urlencoded({ extended: false }), chatsRouter)
 app.get('/', (req, res) => {
     res.send('hello')
 })
-// app.get(
-//     '/.well-known/pki-validation/6448FFC6223A036C982B8E3F95226766.txt',
-//     (req, res) => {
-//         res.sendFile(
-//             __dirname +
-//                 '/well-known/pki-validation/6448FFC6223A036C982B8E3F95226766.txt'
-//         )
-//     }
-// )
+app.get(
+    '/.well-known/pki-validation/6448FFC6223A036C982B8E3F95226766.txt',
+    (req, res) => {
+        res.sendFile(
+            __dirname +
+                '/well-known/pki-validation/6448FFC6223A036C982B8E3F95226766.txt'
+        )
+    }
+)
 // const server = https.createServer(credentials, app)
 const server = http.createServer(app)
 socket(server)
